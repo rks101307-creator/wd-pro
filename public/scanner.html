@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AI Food Scanner · NutriTrack AI</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<main class="main">
+  <div class="top">
+    <div class="row" style="flex:none"><button class="menu" id="menuBtn" aria-label="Menu"><i data-lucide="menu"></i></button>
+    <div><h1>AI Food Scanner</h1><div class="sub">AI gives a rough estimate from a photo. Always check it before saving.</div></div></div>
+  </div>
+
+  <div class="grid gm">
+    <div class="card">
+      <h2>1. Add a photo</h2>
+      <video id="video" autoplay playsinline muted style="width:100%;border-radius:10px;display:none"></video>
+      <img id="preview" alt="Food preview" style="width:100%;border-radius:10px;display:none">
+      <canvas id="snap" hidden></canvas>
+      <div class="row" style="margin-top:10px">
+        <button class="btn ghost" id="camBtn">Use camera</button>
+        <button class="btn ghost" id="captureBtn" hidden>Capture</button>
+        <label class="btn ghost" style="text-align:center">Upload image<input type="file" id="file" accept="image/*" hidden></label>
+      </div>
+      <button class="btn" id="analyzeBtn" style="margin-top:10px;width:100%" disabled>Analyze with AI</button>
+      <p class="sub" id="status"></p>
+    </div>
+    <div class="card">
+      <h2>2. Check and correct</h2>
+      <p class="sub">The AI can be wrong. Edit names and portions, then confirm.</p>
+      <div id="items"><div class="empty">Results will appear here.</div></div>
+      <div class="row" style="margin-top:12px"><select id="mealType"><option>breakfast</option><option>lunch</option><option>dinner</option><option>snack</option></select><button class="btn" id="saveBtn" hidden>Confirm and save meal</button></div>
+    </div>
+  </div>
+</main>
+<script src="js/app.js"></script>
+<script src="js/scanner.js"></script>
+</body>
+</html>

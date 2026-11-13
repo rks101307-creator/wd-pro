@@ -1,0 +1,23 @@
+// Analytics page: draws charts from the real saved data.
+buildShell('nutrition');
+let charts = [];
+const draw = (id, cfg) => { const c = new Chart($(id), cfg); charts.push(c); };
+
+async function load() {
+  const days = +$('#range').value, data = await api('/nutrition/range?days=' + days);
+  charts.forEach(c => c.destroy()); charts = [];
+  const labels = data.map(d => d.date.slice(5)), logged = data.filter(d => d.mealCount > 0);
+  const sum = k => Math.round(data.reduce((a, d) => a + d.totals[k], 0));
+  const avg = k => logged.length ? Math.round(sum(k) / logged.length) : 0;
+  $('#stats').innerHTML = [['Total calories', sum('calories') + ' kcal'], ['Protein', sum('protein') + ' g'], ['Carbs', sum('carbs') + ' g'], ['Fat', sum('fat') + ' g'], ['Fibre', sum('fiber') + ' g'], ['Avg calories / logged day', avg('calories') + ' kcal'], ['Days logged', logged.length + ' of ' + days]]
+    .map(([n, v]) => '<div class="card stat"><span>' + n + '</span><b style="font-size:21px">' + v + '</b></div>').join('');
+  draw('#calChart', { type: 'line', data: { labels, datasets: [{ label: 'kcal', data: data.map(d => d.totals.calories), borderColor: '#ff6b35', backgroundColor: '#ff6b3530', fill: true, tension: .3 }] }, options: { plugins: { legend: { display: false } } } });
+  draw('#macroChart', { type: 'doughnut', data: { labels: ['Protein', 'Carbs', 'Fat'], datasets: [{ data: [sum('protein'), sum('carbs'), sum('fat')], backgroundColor: ['#ff6b35', '#b5d96c', '#f5ba58'] }] } });
+  draw('#trendChart', { type: 'line', data: { labels, datasets: [['protein', '#ff6b35'], ['carbs', '#b5d96c'], ['fat', '#f5ba58']].map(([k, c]) => ({ label: k, data: data.map(d => d.totals[k]), borderColor: c, tension: .3 })) } });
+  // meal type comparison: add up calories of every meal in the period
+  const type = { breakfast: 0, lunch: 0, dinner: 0, snack: 0 };
+  for (const d of data.filter(d => d.mealCount)) (await api('/meals?date=' + d.date)).forEach(m => type[m.mealType] += m.totals.calories);
+  draw('#mealChart', { type: 'bar', data: { labels: Object.keys(type), datasets: [{ label: 'kcal', data: Object.values(type).map(Math.round), backgroundColor: '#ff6b35', borderRadius: 6 }] }, options: { plugins: { legend: { display: false } } } });
+}
+$('#range').onchange = () => load().catch(e => toast(e.message, 1));
+load().catch(e => toast(e.message, 1));

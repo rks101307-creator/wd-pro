@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Exercise · NutriTrack AI</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<main class="main">
+  <div class="top">
+    <div class="row" style="flex:none"><button class="menu" id="menuBtn" aria-label="Menu"><i data-lucide="menu"></i></button>
+    <div><h1>Move your way</h1><div class="sub">Guided workouts, personal challenges, and a little progress every day.</div></div></div>
+  </div>
+
+  <section class="card plan-builder">
+    <div class="card-heading"><div><span class="eyebrow">YOUR AI TRAINER</span><h2>Build a workout for today</h2><div class="sub">Choose your time and equipment. We’ll shape a simple plan around you.</div></div><span class="plan-mark" aria-hidden="true">✦</span></div>
+    <div class="plan-fields"><label>Focus<select id="planFocus"><option>Full body</option><option>Strength</option><option>Cardio</option><option>Mobility and stretching</option><option>Gentle movement</option></select></label><label>Experience<select id="planLevel"><option>Beginner</option><option>Intermediate</option><option>Experienced</option></select></label><label>Time<select id="planTime"><option value="15">15 minutes</option><option value="20" selected>20 minutes</option><option value="30">30 minutes</option><option value="45">45 minutes</option></select></label><label>Equipment<input id="planGear" maxlength="80" placeholder="None, bands, dumbbells…"></label></div>
+    <button class="btn" id="generatePlan"><i data-lucide="sparkles"></i> Create my plan</button><div id="planResult" class="plan-result" aria-live="polite"></div>
+  </section>
+
+  <div class="grid g2">
+    <div class="card"><div class="card-heading"><div><h2>Workout library</h2><div class="sub">Pick a guided session to get moving</div></div></div><input id="exerciseSearch" placeholder="Search walking, strength, yoga…" aria-label="Search workouts"><div class="filter-chips" id="exerciseFilters"></div><div id="lib"></div></div>
+    <div>
+      <div class="card"><div class="card-heading"><div><h2>Your activity</h2><div class="sub">Minutes moved this week</div></div><span class="tag" id="weekMinutes">0 min</span></div><canvas id="weekChart" height="160"></canvas><div id="weekFallback" class="empty" hidden></div></div>
+      <div class="card challenge-card" style="margin-top:16px"><div class="card-heading"><div><span class="eyebrow">PERSONAL CHALLENGE</span><h2 id="challengeTitle">Show up 3 times</h2></div><span class="challenge-icon">🏁</span></div><p id="challengeCopy" class="sub">Log three activity sessions this week. Every session counts.</p><div class="challenge-progress"><i id="challengeBar"></i></div><div class="row challenge-meta"><span id="challengeCount">0 of 3 sessions</span><button class="text-button" id="shareChallenge">Share challenge</button></div></div>
+      <div class="card watch-card" style="margin-top:16px"><span class="eyebrow">FROM YOUR WATCH</span><h2 style="margin-top:6px">Bring in your activity</h2><p class="sub">Log a session or import CSV. Columns: date, activity, minutes, distance_km, route.</p><label class="sub" for="watchName">Activity</label><input id="watchName" placeholder="e.g. Morning run"><label class="sub" for="watchMinutes">Duration in minutes</label><input id="watchMinutes" type="number" min="1" max="300" placeholder="30"><label class="sub" for="watchDistance">Distance in km (optional)</label><input id="watchDistance" type="number" min="0.1" max="2000" step="0.1" placeholder="5.2"><label class="sub" for="watchRoute">Route (optional)</label><input id="watchRoute" maxlength="160" placeholder="Park loop"><button class="btn ghost" id="watchLog" style="margin-top:10px">Add activity</button><div class="watch-import"><label class="sub" for="watchCsv">Import activity CSV</label><input id="watchCsv" type="file" accept=".csv,text/csv"><button class="text-button" id="watchImport">Import file</button></div><small class="sub">Automatic watch syncing requires a device health app connection.</small></div>
+      <div class="card sleep-card" style="margin-top:16px"><span class="eyebrow">REST AND RECOVERY</span><h2 style="margin-top:6px">Sleep tracker</h2><p id="sleepSummary" class="sub">Log sleep to see your recent average.</p><div class="sleep-fields"><label>Hours slept<input id="sleepHours" type="number" min="0.5" max="24" step="0.5" placeholder="7.5"></label><label>Quality<select id="sleepQuality"><option value="5">Great</option><option value="4">Good</option><option value="3" selected>Okay</option><option value="2">Restless</option><option value="1">Poor</option></select></label><label>Date<input id="sleepDate" type="date"></label></div><button class="btn ghost" id="sleepSave" style="margin-top:10px">Log sleep</button><div id="sleepRecent" class="sleep-recent"></div></div>
+      <div class="card" style="margin-top:16px"><h2>Recent sessions</h2><div id="log"></div></div>
+    </div>
+  </div>
+  <div class="modal" id="modal"><div class="card"><h2 id="mTitle"></h2><p id="mDesc" class="sub"></p><ol id="mSteps"></ol><label class="sub">Minutes</label><input id="mins" type="number" min="1" max="300"><div class="row" style="margin-top:14px;justify-content:flex-end"><button class="btn ghost" id="mCancel">Close</button><button class="btn ghost" id="mLog">Log activity</button><button class="btn" id="mStart">Start guided</button></div></div></div>
+  <div class="modal" id="guideModal" aria-live="polite"><div class="card guide-card"><button class="guide-close" id="guideClose" aria-label="Close guided session">×</button><span class="eyebrow">GUIDED SESSION</span><h2 id="guideName"></h2><div class="guide-clock" id="guideClock">00:00</div><div class="guide-progress"><i id="guideBar"></i></div><div class="guide-step-count" id="guideCount"></div><p id="guideStep" class="guide-step"></p><div class="row"><button class="btn ghost" id="guidePause">Pause</button><button class="btn" id="guideNext">Next step</button></div><button class="text-button guide-finish" id="guideFinish">Finish session</button></div></div>
+  <div class="modal" id="summaryModal"><div class="card summary-card"><span class="summary-burst">✦</span><span class="eyebrow">SESSION COMPLETE</span><h2 id="summaryTitle">Nice work showing up.</h2><p id="summaryStats" class="sub"></p><div id="summaryBadge" class="summary-badge"></div><button class="btn" id="summaryDone">Done</button></div></div>
+</main>
+<script src="js/app.js"></script>
+<script src="js/exercise.js"></script>
+</body>
+</html>

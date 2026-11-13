@@ -1,0 +1,122 @@
+[
+  {
+    "id": "walk",
+    "name": "Brisk walking",
+    "category": "Walking",
+    "defaultMinutes": 20,
+    "description": "Easy, low-impact cardio you can do anywhere.",
+    "steps": [
+      "Stand tall, relax shoulders",
+      "Walk at a pace where you can still talk",
+      "Swing arms naturally"
+    ]
+  },
+  {
+    "id": "cycle",
+    "name": "Cycling",
+    "category": "Cycling",
+    "defaultMinutes": 20,
+    "description": "Steady pedalling at a comfortable pace.",
+    "steps": [
+      "Adjust the seat so your knee is slightly bent",
+      "Pedal smoothly",
+      "Wear a helmet"
+    ]
+  },
+  {
+    "id": "jog",
+    "name": "Easy jog",
+    "category": "Running",
+    "defaultMinutes": 15,
+    "description": "Light running at a relaxed pace.",
+    "steps": [
+      "Warm up by walking 3 minutes",
+      "Jog slowly",
+      "Cool down by walking"
+    ]
+  },
+  {
+    "id": "squat",
+    "name": "Bodyweight squats",
+    "category": "Bodyweight",
+    "defaultMinutes": 10,
+    "description": "Strengthens legs and core.",
+    "steps": [
+      "Feet shoulder-width apart",
+      "Sit back like onto a chair",
+      "Keep chest up, stand back up"
+    ]
+  },
+  {
+    "id": "pushup",
+    "name": "Push-ups (knees ok)",
+    "category": "Bodyweight",
+    "defaultMinutes": 10,
+    "description": "Builds chest, arms and shoulders.",
+    "steps": [
+      "Hands under shoulders",
+      "Keep body in a straight line",
+      "Lower slowly, push up"
+    ]
+  },
+  {
+    "id": "plank",
+    "name": "Plank",
+    "category": "Strength",
+    "defaultMinutes": 5,
+    "description": "Core strength exercise.",
+    "steps": [
+      "Rest on forearms and toes",
+      "Keep back straight",
+      "Hold 15-30 seconds, rest, repeat"
+    ]
+  },
+  {
+    "id": "lunge",
+    "name": "Lunges",
+    "category": "Strength",
+    "defaultMinutes": 10,
+    "description": "Leg strength and balance.",
+    "steps": [
+      "Step forward",
+      "Lower back knee toward floor",
+      "Push back to start, switch legs"
+    ]
+  },
+  {
+    "id": "stretch",
+    "name": "Full-body stretch",
+    "category": "Stretching",
+    "defaultMinutes": 10,
+    "description": "Gentle stretching for flexibility.",
+    "steps": [
+      "Reach overhead",
+      "Touch toward toes gently",
+      "Hold each stretch 20 seconds"
+    ]
+  },
+  {
+    "id": "mobility",
+    "name": "Hip and shoulder mobility",
+    "category": "Mobility",
+    "defaultMinutes": 10,
+    "description": "Slow joint circles to loosen up.",
+    "steps": [
+      "Make slow arm circles",
+      "Rotate hips in wide circles",
+      "Move gently, never force"
+    ]
+  },
+  {
+    "id": "yoga",
+    "name": "Beginner yoga flow",
+    "category": "Mobility",
+    "defaultMinutes": 15,
+    "description": "Calm movement and breathing.",
+    "steps": [
+      "Cat-cow x 8",
+      "Child pose 30 seconds",
+      "Downward dog 30 seconds"
+    ]
+  }
+]
