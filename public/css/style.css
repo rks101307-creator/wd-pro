@@ -624,6 +624,11 @@ iframe {
 
 @media (max-width: 760px) {
     .gm { grid-template-columns: minmax(0, 1fr) }
+
+    /* Keep the menu compact so the page title has room beside it. */
+    .top > .row { flex: 1 1 auto; }
+    .top > .row .menu { flex: 0 0 44px; width: 44px; }
+    .top > .row > div { min-width: 0; }
 }
 
 @media (max-width: 380px) {
