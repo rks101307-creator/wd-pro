@@ -11,6 +11,15 @@ async function load() {
   const avg = k => logged.length ? Math.round(sum(k) / logged.length) : 0;
   $('#stats').innerHTML = [['Total calories', sum('calories') + ' kcal'], ['Protein', sum('protein') + ' g'], ['Carbs', sum('carbs') + ' g'], ['Fat', sum('fat') + ' g'], ['Fibre', sum('fiber') + ' g'], ['Avg calories / logged day', avg('calories') + ' kcal'], ['Days logged', logged.length + ' of ' + days]]
     .map(([n, v]) => '<div class="card stat"><span>' + n + '</span><b style="font-size:21px">' + v + '</b></div>').join('');
+  if (!window.Chart) {
+    ['calChart', 'macroChart', 'trendChart', 'mealChart'].forEach(id => {
+      $(id).hidden = true;
+      let note = $('#' + id + 'Fallback');
+      if (!note) { note = document.createElement('p'); note.id = id + 'Fallback'; note.className = 'empty'; $(id).after(note); }
+      note.textContent = 'Chart library unavailable. Your saved totals are shown above.';
+    });
+    return;
+  }
   draw('#calChart', { type: 'line', data: { labels, datasets: [{ label: 'kcal', data: data.map(d => d.totals.calories), borderColor: '#ff6b35', backgroundColor: '#ff6b3530', fill: true, tension: .3 }] }, options: { plugins: { legend: { display: false } } } });
   draw('#macroChart', { type: 'doughnut', data: { labels: ['Protein', 'Carbs', 'Fat'], datasets: [{ data: [sum('protein'), sum('carbs'), sum('fat')], backgroundColor: ['#ff6b35', '#b5d96c', '#f5ba58'] }] } });
   draw('#trendChart', { type: 'line', data: { labels, datasets: [['protein', '#ff6b35'], ['carbs', '#b5d96c'], ['fat', '#f5ba58']].map(([k, c]) => ({ label: k, data: data.map(d => d.totals[k]), borderColor: c, tension: .3 })) } });
