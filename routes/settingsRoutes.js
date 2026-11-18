@@ -38,6 +38,7 @@ router.post('/settings/import', (req, res) => {
 router.delete('/settings/clear', (req, res) => {
   if (req.body?.confirm !== 'DELETE') return res.status(400).json({ error: 'Type DELETE to confirm' });
   ['meals', 'water', 'exercise_log', 'sleep_log'].forEach(f => storage.write(f, []));
+  storage.write('food_database', storage.read('food_database').filter(food => !food.custom));
   fs.rmSync(path.join(__dirname, '..', 'database', 'profile.json'), { force: true });   // profile resets to defaults on next read
   res.json({ ok: true });
 });
