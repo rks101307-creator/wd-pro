@@ -37,6 +37,7 @@ router.post('/ai/chat', async (req, res, next) => {
     if (!msg) throw bad('Message is required');
     const profile = storage.read('profile'), day = nutrition.daily(today());
     const rangeDays = [7, 30].includes(Number(req.body?.rangeDays)) ? Number(req.body.rangeDays) : 7;
+    const includeExercise = req.body?.includeExercise !== false;
     const nutritionRows = nutrition.range(today(), rangeDays);
     const rangeTotals = nutritionRows.reduce((totals, row) => {
       Object.keys(totals).forEach(key => totals[key] += row.totals[key]);
@@ -48,6 +49,7 @@ router.post('/ai/chat', async (req, res, next) => {
     const sleepRows = storage.read('sleep_log').slice(-7), averageSleep = sleepRows.length ? (sleepRows.reduce((sum, s) => sum + Number(s.hours || 0), 0) / sleepRows.length).toFixed(1) + ' hours' : 'not logged';
     const system = 'You are a supportive nutrition and activity assistant for a student. Give practical, balanced, non-restrictive suggestions. ' +
       'Never prescribe weight-loss diets, calorie deficits or aggressive exercise. Nutrition numbers are estimates. ' +
+      (includeExercise ? 'For this reply, include clearly labeled Food tips and Exercise tips sections. Give at least one practical suggestion in each section, and tailor exercise suggestions to the user request and recorded activity when possible. ' : '') +
       'Use ONLY the data below. If something is not recorded, say you do not know.\n' +
       'Age: ' + (profile.age || 'not saved') + '\nGoals: ' + JSON.stringify({ calories: profile.calorieGoal, protein: profile.proteinGoal }) +
       '\nToday totals: ' + JSON.stringify(day.totals) + ', water ml: ' + day.water +
