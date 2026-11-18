@@ -12,7 +12,7 @@ async function send() {
   $('#msg').value = ''; if ($('#chat .empty')) $('#chat').innerHTML = '';
   bubble('user', text); const wait = bubble('assistant', 'Thinking…');
   try {
-    const r = await api('/ai/chat', { method: 'POST', body: { message: text, history } });
+    const r = await api('/ai/chat', { method: 'POST', body: { message: text, history, includeExercise: $('#includeExercise').checked } });
     wait.textContent = r.reply; history.push({ role: 'user', content: text }, { role: 'assistant', content: r.reply });
   } catch (e) { wait.textContent = e.message; wait.className = 'item'; }   // AI offline? show the error, app still works
 }
