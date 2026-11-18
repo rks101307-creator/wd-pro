@@ -23,7 +23,15 @@ function drawCalendar(monthDays) {
   $('#cal').innerHTML = html;
   const labels = [...Array(count)].map((_, i) => i + 1), data = labels.map(d => Math.round(has[month + '-' + String(d).padStart(2, '0')] || 0));
   if (chart) chart.destroy();
-  chart = new Chart($('#monthChart'), { type: 'bar', data: { labels, datasets: [{ label: 'kcal', data, backgroundColor: '#ff6b35' }] }, options: { plugins: { legend: { display: false } } } });
+  if (window.Chart) {
+    $('#monthChart').hidden = false;
+    chart = new Chart($('#monthChart'), { type: 'bar', data: { labels, datasets: [{ label: 'kcal', data, backgroundColor: '#ff6b35' }] }, options: { plugins: { legend: { display: false } } } });
+  } else {
+    $('#monthChart').hidden = true;
+    let fallback = $('#monthChartFallback');
+    if (!fallback) { fallback = document.createElement('p'); fallback.id = 'monthChartFallback'; fallback.className = 'empty'; $('#monthChart').after(fallback); }
+    fallback.textContent = 'Chart library unavailable. Your daily records are still shown in the calendar and history list.';
+  }
 }
 $('#cal').onclick = e => { if (e.target.dataset.date) { $('#date').value = e.target.dataset.date; load(); } };
 const shift = n => { const [y, m] = month.split('-').map(Number), d = new Date(y, m - 1 + n, 1); month = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); $('#date').value = ''; load(); };
