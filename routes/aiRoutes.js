@@ -36,16 +36,24 @@ router.post('/ai/chat', async (req, res, next) => {
     const msg = String(req.body?.message || '').trim();
     if (!msg) throw bad('Message is required');
     const profile = storage.read('profile'), day = nutrition.daily(today());
+    const rangeDays = [7, 30].includes(Number(req.body?.rangeDays)) ? Number(req.body.rangeDays) : 7;
+    const nutritionRows = nutrition.range(today(), rangeDays);
+    const rangeTotals = nutritionRows.reduce((totals, row) => {
+      Object.keys(totals).forEach(key => totals[key] += row.totals[key]);
+      return totals;
+    }, { calories: 0, protein: 0, carbs: 0, fat: 0, fiber: 0 });
     const meals = storage.read('meals').filter(m => m.date === today()).map(m => m.mealType + ': ' + m.quantity + ' x ' + m.name);
-    const workouts = storage.read('exercise_log').slice(-5).map(e => e.date + ' ' + e.name + ' ' + e.minutes + ' min');
+    const rangeStart = nutritionRows[0]?.date || today();
+    const workouts = storage.read('exercise_log').filter(e => e.date >= rangeStart && e.date <= today()).slice(-30).map(e => e.date + ' ' + e.name + ' ' + e.minutes + ' min');
     const sleepRows = storage.read('sleep_log').slice(-7), averageSleep = sleepRows.length ? (sleepRows.reduce((sum, s) => sum + Number(s.hours || 0), 0) / sleepRows.length).toFixed(1) + ' hours' : 'not logged';
     const system = 'You are a supportive nutrition and activity assistant for a student. Give practical, balanced, non-restrictive suggestions. ' +
       'Never prescribe weight-loss diets, calorie deficits or aggressive exercise. Nutrition numbers are estimates. ' +
       'Use ONLY the data below. If something is not recorded, say you do not know.\n' +
       'Age: ' + (profile.age || 'not saved') + '\nGoals: ' + JSON.stringify({ calories: profile.calorieGoal, protein: profile.proteinGoal }) +
       '\nToday totals: ' + JSON.stringify(day.totals) + ', water ml: ' + day.water +
+      '\nTotals for the last ' + rangeDays + ' days: ' + JSON.stringify(rangeTotals) +
+      '\nExercise sessions in that period: ' + (workouts.join('; ') || 'none recorded') +
       '\nToday meals: ' + (meals.join('; ') || 'none recorded') +
-      '\nRecent exercise: ' + (workouts.join('; ') || 'none recorded') +
       '\nRecent sleep average: ' + averageSleep +
       '\nPreferences: ' + (profile.preferences || 'none saved');
     // keep the last few chat turns so the assistant remembers the conversation
